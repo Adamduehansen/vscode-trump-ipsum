@@ -11,7 +11,8 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.getParagraph"
+        "onCommand:extension.getParagraph",
+        "onCommand:extension.getText"
     ],
     "main": "./out/main",
     "contributes": {
@@ -19,6 +20,10 @@
             {
                 "command": "extension.getParagraph",
                 "title": "Trump Ipsum: Get Paragraph"
+            },
+            {
+                "command": "extension.getText",
+                "title": "Trump Ipsum: Get Text"
             }
         ]
     },
