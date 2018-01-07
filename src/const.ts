@@ -1,0 +1,1 @@
+export const SERVICE_URL = "http://trumpipsum.net"    // Url for the trump ipsum service
