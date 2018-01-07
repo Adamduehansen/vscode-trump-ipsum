@@ -1,17 +1,22 @@
-import * as vscode from "vscode"
+import { window } from "vscode"
 import * as http from "http"
 
 /**
- * 
+ * Get paragraph handler.
  */
 export function getParagraphHandler() {
   console.log("Executing the \"GetPlaceholder\" command!")
 
-  vscode.window.showQuickPick(new Promise(resolve => resolve(["1", "2", "3", "4", "5"])), {
+  window.showQuickPick(new Promise(resolve => resolve(["1", "2", "3", "4", "5"])), {
     placeHolder: "Choose amount of paragraphs"
   }).then(fetchPlaceholder)
 }
 
+/**
+ * Fetches an amount of paragraphs through the trump ipsum service.
+ * 
+ * @param selectedValue   The amount of paragraphs to fetch.
+ */
 const fetchPlaceholder = selectedValue => {
   const requestUrl = `http://trumpipsum.net/?paras=${selectedValue}&type=make-it-great`
   console.log("Ready to fetch paragraphs")
@@ -21,7 +26,9 @@ const fetchPlaceholder = selectedValue => {
 
     // Stop execution if request was not successful
     if (statusCode !== 200) {
-      vscode.window.showErrorMessage(`Request failed: ${statusCode}`)
+      const errorMessage = `Request failed: ${statusCode}`
+      console.error(errorMessage)
+      window.showErrorMessage(errorMessage)
       response.resume()
       return
     }
@@ -29,9 +36,11 @@ const fetchPlaceholder = selectedValue => {
     let rawData
     response.on("data", chuck => {rawData += chuck})
     response.on("end", () => {
+      // Write the response content to the active text editor.
+      console.log("Finished fetching!")
       const regex = /<div class="anyipsum-output"><p>([\s\S]*?)<\/p><\/div>/
       var placeholderText = regex.exec(rawData)[1]
-      const activeTextEditor = vscode.window.activeTextEditor
+      const activeTextEditor = window.activeTextEditor
       activeTextEditor.edit(editBuilder => {      
         editBuilder.insert(activeTextEditor.selection.active, placeholderText)
       })
