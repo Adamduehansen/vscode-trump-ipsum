@@ -1,5 +1,6 @@
 import { window } from "vscode"
 import * as http from "http"
+import { removeTagsAndWhitespace } from "../removeTagsAndWhitespace";
 
 /**
  * Get paragraph handler.
@@ -39,7 +40,8 @@ const fetchPlaceholder = selectedValue => {
       // Write the response content to the active text editor.
       console.log("Finished fetching!")
       const regex = /<div class="anyipsum-output"><p>([\s\S]*?)<\/p><\/div>/
-      var placeholderText = regex.exec(rawData)[1]
+      let placeholderText = regex.exec(rawData)[1]
+      placeholderText = removeTagsAndWhitespace(placeholderText)
       const activeTextEditor = window.activeTextEditor
       activeTextEditor.edit(editBuilder => {      
         editBuilder.insert(activeTextEditor.selection.active, placeholderText)

@@ -1,7 +1,15 @@
 import { window } from "vscode"
 import * as http from "http"
 import { SERVICE_URL } from "../const";
+import { removeTagsAndWhitespace } from "../removeTagsAndWhitespace";
 
+/**
+ * Validates if the passed input value. A valid input must:
+ *  1. be a number
+ *  2. be below 1000.
+ * 
+ * @param inputValue   The input value to validate upon.
+ */
 const validateInput = (inputValue: any) => {
   if (isNaN(inputValue)) {
     return "Please enter a numeric value!"
@@ -15,7 +23,7 @@ const validateInput = (inputValue: any) => {
 }
 
 /**
- * 
+ * Get text handler
  */
 export function getTextHandler() {
   console.log("Executing the \"GetText\" command!")
@@ -26,7 +34,12 @@ export function getTextHandler() {
   }).then(fetchText)
 }
 
-const fetchText = (inputValue: string) => {
+/**
+ * Fetches a set of paragraphs and creates a substring with the specified length.
+ * 
+ * @param textLength 
+ */
+const fetchText = (textLength: string) => {
   console.log("Ready to fetch text!")
   const requestUrl = `${SERVICE_URL}?paras=3&type=make-it-great`
 
@@ -48,8 +61,9 @@ const fetchText = (inputValue: string) => {
       // Write the response content to the active text editor.
       console.log("Finished fetching!")
       const regex = /<div class="anyipsum-output"><p>([\s\S]*?)<\/p><\/div>/
-      var placeholderText = regex.exec(rawData)[1]
-      var placeholderText = placeholderText.substr(0, parseInt(inputValue))
+      let placeholderText = regex.exec(rawData)[1]
+      placeholderText = placeholderText.substr(0, parseInt(textLength))
+      placeholderText = removeTagsAndWhitespace(placeholderText)
       const activeTextEditor = window.activeTextEditor
       activeTextEditor.edit(editBuilder => {      
         editBuilder.insert(activeTextEditor.selection.active, placeholderText)
