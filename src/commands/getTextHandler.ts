@@ -1,4 +1,4 @@
-import { window } from "vscode"
+import { window, Range } from "vscode"
 import * as http from "http"
 import { SERVICE_URL } from "../const";
 import { removeTagsAndWhitespace } from "../removeTagsAndWhitespace";
@@ -43,6 +43,11 @@ const fetchText = (textLength: string) => {
   console.log("Ready to fetch text!")
   const requestUrl = `${SERVICE_URL}?paras=3&type=make-it-great`
 
+  const locationOfSelectionBeforeMessage = window.activeTextEditor.selection.active
+  window.activeTextEditor.edit(editBuilder => {
+    editBuilder.insert(locationOfSelectionBeforeMessage, "Talking to Trump Ipsum...")
+  })
+
   http.get(requestUrl, (response: http.IncomingMessage) => {
     const { statusCode } = response
 
@@ -56,7 +61,7 @@ const fetchText = (textLength: string) => {
     }
 
     let rawData
-    response.on("data", chuck => {rawData += chuck})
+    response.on("data", chunk => rawData += chunk)
     response.on("end", () => {
       // Write the response content to the active text editor.
       console.log("Finished fetching!")
@@ -64,9 +69,11 @@ const fetchText = (textLength: string) => {
       let placeholderText = regex.exec(rawData)[1]
       placeholderText = placeholderText.substr(0, parseInt(textLength))
       placeholderText = removeTagsAndWhitespace(placeholderText)
-      const activeTextEditor = window.activeTextEditor
-      activeTextEditor.edit(editBuilder => {      
-        editBuilder.insert(activeTextEditor.selection.active, placeholderText)
+      
+      const locationOfSelectionAfterMessage = window.activeTextEditor.selection.active
+      window.activeTextEditor.edit(editBuilder => {      
+        editBuilder.insert(window.activeTextEditor.selection.active, placeholderText)
+        editBuilder.replace(new Range(locationOfSelectionBeforeMessage, locationOfSelectionAfterMessage), "")
       })
     })
   })

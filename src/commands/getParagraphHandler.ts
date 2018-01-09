@@ -1,4 +1,4 @@
-import { window } from "vscode"
+import { window, Range } from "vscode"
 import * as http from "http"
 import { removeTagsAndWhitespace } from "../removeTagsAndWhitespace";
 
@@ -19,8 +19,13 @@ export function getParagraphHandler() {
  * @param selectedValue   The amount of paragraphs to fetch.
  */
 const fetchPlaceholder = selectedValue => {
-  const requestUrl = `http://trumpipsum.net/?paras=${selectedValue}&type=make-it-great`
   console.log("Ready to fetch paragraphs")
+  const requestUrl = `http://trumpipsum.net/?paras=${selectedValue}&type=make-it-great`
+
+  const locationOfSelectionBeforeMessage = window.activeTextEditor.selection.active
+  window.activeTextEditor.edit(editBuilder => {
+    editBuilder.insert(locationOfSelectionBeforeMessage, "Talking to Trump Ipsum...")
+  })
   
   http.get(requestUrl, response => {
     const { statusCode } = response
@@ -42,9 +47,11 @@ const fetchPlaceholder = selectedValue => {
       const regex = /<div class="anyipsum-output"><p>([\s\S]*?)<\/p><\/div>/
       let placeholderText = regex.exec(rawData)[1]
       placeholderText = removeTagsAndWhitespace(placeholderText)
-      const activeTextEditor = window.activeTextEditor
-      activeTextEditor.edit(editBuilder => {      
-        editBuilder.insert(activeTextEditor.selection.active, placeholderText)
+      
+      const locationOfSelectionAfterMessage = window.activeTextEditor.selection.active
+      window.activeTextEditor.edit(editBuilder => {      
+        editBuilder.insert(window.activeTextEditor.selection.active, placeholderText)
+        editBuilder.replace(new Range(locationOfSelectionBeforeMessage, locationOfSelectionAfterMessage), "")
       })
     })
   })
