@@ -4,4 +4,6 @@ All notable changes to the "trump-ipsum" extension will be documented in this fi
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
-- Initial release
+### Added
+  - The "Trump Ipsum: Get Paragraph" command.
+  - The "Trump Ipsum: Get Text" command.
