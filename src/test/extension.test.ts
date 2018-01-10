@@ -27,5 +27,8 @@ suite("Extension Tests", () => {
     const expectedString = "Lorem Ipsum"
     let actualString = removeTagsAndWhitespace("Lorem       Ipsum")
     assert.equal(actualString, expectedString)
+
+    actualString = removeTagsAndWhitespace(" Lorem Ipsum")
+    assert.equal(actualString, expectedString)
   })
 });

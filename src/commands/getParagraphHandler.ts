@@ -1,5 +1,6 @@
 import { window, Range } from "vscode"
 import * as http from "http"
+import { SERVICE_URL } from "../const"
 import { removeTagsAndWhitespace } from "../removeTagsAndWhitespace";
 
 /**
@@ -20,7 +21,7 @@ export function getParagraphHandler() {
  */
 const fetchPlaceholder = selectedValue => {
   console.log("Ready to fetch paragraphs")
-  const requestUrl = `http://trumpipsum.net/?paras=${selectedValue}&type=make-it-great`
+  const requestUrl = `${SERVICE_URL}?paras=${selectedValue}&type=make-it-great`
 
   const locationOfSelectionBeforeMessage = window.activeTextEditor.selection.active
   window.activeTextEditor.edit(editBuilder => {

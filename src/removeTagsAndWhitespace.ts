@@ -6,5 +6,5 @@
 export function removeTagsAndWhitespace(paragraphs: string) {
   paragraphs = paragraphs.replace(/<\/?[^>]+(>|$)/g, "")
   paragraphs = paragraphs.replace(/ +(?= )/g,"")
-  return paragraphs
+  return paragraphs.trim()
 }
