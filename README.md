@@ -4,16 +4,16 @@
 
 ## Features
 
-"Vs Code Trump Ipsum" adds features to Vscode:
+"Vs Code Trump Ipsum" adds two features to Vscode:
 ### Get Paragraph
 Adds a desired number of paragraphs of text to the current open editor.
 Command: TrumpIpsum: Get Paragraph
-![]\(gifs/get-paragraph.gif\)
+![](gifs/get-paragraph.gif)
 
 ### Get Text
 Adds a desired number of characters to the current open editor
 Command: TrumpIpsum: Get Text
-![]\(gifs/get-text.gif\)
+![](gifs/get-text.gif)
 
 ## Known Issues
 * Sometimes text might be added with a whitespace in front.
